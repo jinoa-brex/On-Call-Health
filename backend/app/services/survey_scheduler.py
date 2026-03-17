@@ -14,6 +14,7 @@ import pytz
 
 from ..models.survey_schedule import SurveySchedule, UserSurveyPreference
 from ..models.user_correlation import UserCorrelation
+from ..models.user import User
 from ..models.slack_integration import SlackIntegration
 from ..models.slack_workspace_mapping import SlackWorkspaceMapping
 from ..models.user_burnout_report import UserBurnoutReport

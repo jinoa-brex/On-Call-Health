@@ -8,6 +8,7 @@ from fastapi import Request, Response, HTTPException, status
 from fastapi.responses import JSONResponse
 import json
 
+from ..core.config import settings
 from ..core.input_validation import validate_request_size, sanitize_dict_recursive
 
 logger = logging.getLogger(__name__)
