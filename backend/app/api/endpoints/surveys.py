@@ -561,8 +561,15 @@ async def manual_survey_delivery(
             "triggered_by": current_user.email
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Manual survey delivery failed: {str(e)}")
+
+        try:
+            db.rollback()
+        except Exception:
+            logger.warning("Failed to rollback session after manual survey delivery error", exc_info=True)
 
         # Create error notification for admin who triggered it
         notification_service = NotificationService(db)
