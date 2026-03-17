@@ -208,15 +208,19 @@ async def security_middleware(request: Request, call_next: Callable) -> Response
         return response
         
     except Exception as e:
-        # Log security middleware errors
-        logger.error(f"🚨 Security middleware error: {e}")
-        
+        # Log security middleware errors with traceback so staging can reveal the root cause.
+        logger.exception("🚨 Security middleware error")
+
+        detail = "An internal error occurred"
+        if settings.ENVIRONMENT in ("development", "staging"):
+            detail = str(e) or e.__class__.__name__
+
         # Return secure error response
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
                 "error": "internal_server_error",
-                "detail": "An internal error occurred"
+                "detail": detail
             },
             headers={
                 "X-Content-Type-Options": "nosniff",
