@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { API_BASE } from "../types"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -69,10 +69,14 @@ export function UnifiedSlackCard({
   setIsConnectingSlackOAuth,
   toast
 }: UnifiedSlackCardProps) {
-  const [surveyEnabled, setSurveyEnabled] = useState(slackIntegration?.survey_enabled ?? true)
+  const [surveyEnabled, setSurveyEnabled] = useState(slackIntegration?.survey_enabled ?? false)
   const [showSurveyDisableConfirm, setShowSurveyDisableConfirm] = useState(false)
 
   const isConnected = !!slackIntegration
+
+  useEffect(() => {
+    setSurveyEnabled(slackIntegration?.survey_enabled ?? false)
+  }, [slackIntegration?.id, slackIntegration?.survey_enabled])
 
   const handleSlackConnect = () => {
     const clientId = process.env.NEXT_PUBLIC_SLACK_CLIENT_ID

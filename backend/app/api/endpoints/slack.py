@@ -59,16 +59,32 @@ def get_active_workspace_mapping(db: Session, user: User) -> SlackWorkspaceMappi
     """
     workspace_mapping = None
     if user.organization_id:
-        workspace_mapping = db.query(SlackWorkspaceMapping).filter(
-            SlackWorkspaceMapping.organization_id == user.organization_id,
-            SlackWorkspaceMapping.status == 'active'
-        ).first()
+        workspace_mapping = (
+            db.query(SlackWorkspaceMapping)
+            .filter(
+                SlackWorkspaceMapping.organization_id == user.organization_id,
+                SlackWorkspaceMapping.status == 'active'
+            )
+            .order_by(
+                SlackWorkspaceMapping.registered_at.desc(),
+                SlackWorkspaceMapping.id.desc()
+            )
+            .first()
+        )
 
     if not workspace_mapping:
-        workspace_mapping = db.query(SlackWorkspaceMapping).filter(
-            SlackWorkspaceMapping.owner_user_id == user.id,
-            SlackWorkspaceMapping.status == 'active'
-        ).first()
+        workspace_mapping = (
+            db.query(SlackWorkspaceMapping)
+            .filter(
+                SlackWorkspaceMapping.owner_user_id == user.id,
+                SlackWorkspaceMapping.status == 'active'
+            )
+            .order_by(
+                SlackWorkspaceMapping.registered_at.desc(),
+                SlackWorkspaceMapping.id.desc()
+            )
+            .first()
+        )
 
     return workspace_mapping
 
